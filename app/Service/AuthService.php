@@ -25,7 +25,7 @@ class AuthService
 
     public function resetPassword($data){
         $user = User::findOrFail($data['user_id']);
-        $user->update(['password'=>Hash::make($data['password'])]);
+        $user->update(['password'=>$data['password']]);
         return [
             "user"=>$user
         ];
