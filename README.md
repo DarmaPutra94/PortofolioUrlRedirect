@@ -80,3 +80,9 @@ php artisan serve
 ### Run all tests:
 
 php artisan test
+
+## 📝 Note
+
+While this project fully meets the requirements of the original challenge,  
+I plan to add additional features and improvements in the future.  
+Development is ongoing, and new updates will be reflected here as they are completed
