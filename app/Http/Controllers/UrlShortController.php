@@ -7,9 +7,15 @@ use App\Models\User;
 use App\Service\UrlShorterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UrlShortController extends Controller
 {
+    private $url_shorter_service_manager;
+
+    public function __construct() {
+        $this->url_shorter_service_manager = new UrlShorterService();
+    }
     /**
      * Display a listing of the resource.
      */
@@ -31,16 +37,14 @@ class UrlShortController extends Controller
      */
     public function store(Request $request)
     {
-        $url_shorter_service_manager = new UrlShorterService();
         $data = (object) $request->validate(['url'=>'required|active_url']);
-        $hashed_url = $url_shorter_service_manager->hashUrl($data->url);
-        $short_code = $url_shorter_service_manager->generateShortUrlCode();
-        $short_url = $url_shorter_service_manager->storeUrl(auth()->user, [
+        Gate::authorize('create', UrlShort::class);
+        $short_code = $this->url_shorter_service_manager->generateShortUrlCode();
+        $short_url = $this->url_shorter_service_manager->storeUrl(Auth::user(), [
             "url"=>$data->url,
-            "url_hash"=>$hashed_url,
             "short_code"=>$short_code
         ]);
-        return response()->json($short_url);
+        return $short_url->toResource();
     }
 
 
@@ -48,10 +52,11 @@ class UrlShortController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($short_url)
+    public function show($short_code)
     {
-        $url = UrlShort::where("short_url", $short_url)->get();
-        return response()->json($url);
+        $short_url = $this->url_shorter_service_manager->getUrl($short_code);
+        Gate::authorize('view', $short_url);
+        return $short_url->toResource();
     }
 
     /**
@@ -67,21 +72,29 @@ class UrlShortController extends Controller
      */
     public function update(Request $request, $short_code)
     {
-        $url_shorter_service_manager = new UrlShorterService();
         $data = (object) $request->validate(['url'=>'required|active_url']);
-        $hashed_url = $url_shorter_service_manager->hashUrl($data->url);
-        $short_url = $url_shorter_service_manager->updateUrl($short_code, [
+        $short_url = $this->url_shorter_service_manager->getUrl($short_code);
+        Gate::authorize('update', $short_url);
+        $short_url = $this->url_shorter_service_manager->updateUrl($short_url, [
             "url"=>$data->url,
-            "url_hash"=>$hashed_url,
         ]);
-        return response()->json($short_url);
+        return $short_url->toResource();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UrlShort $urlShort)
+    public function destroy($short_code)
     {
-        //
+        $short_url = $this->url_shorter_service_manager->getUrl($short_code);
+        Gate::authorize('delete', $short_url);
+        $this->url_shorter_service_manager->deleteUrl($short_url);
+        return response()->json([], 204);
+    }
+
+    public function redirect($short_code){
+        $short_url = $this->url_shorter_service_manager->getUrl($short_code);
+        $short_url = $this->url_shorter_service_manager->increaseAccesCount($short_url);
+        return redirect($short_url->url);
     }
 }
