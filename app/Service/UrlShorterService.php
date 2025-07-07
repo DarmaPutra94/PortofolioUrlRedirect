@@ -17,27 +17,36 @@ class UrlShorterService
         //
     }
 
-
-    public function hashUrl($url){
-        $hashed_url = Hash::make("sha256", $url);
-        return $hashed_url;
+    public function getUrl($short_code){
+        $short_url = UrlShort::where('short_code', $short_code)->firstOrFail();
+        return $short_url;
     }
 
     public function generateShortUrlCode(){
         do {
-            $code = Str::random(4);
+            $code = Str::random(6);
         } while (UrlShort::where('short_code', $code)->exists());
         return $code;
     }
 
     public function storeUrl(User $user, $data){
-        $user->shortUrls()->create($data);
-        return $user->shortUrls;
+        $short_url = $user->shortUrls()->create($data);
+        return $short_url;
     }
 
-    public function updateUrl($shortcode, $data){
-        $short_url = UrlShort::where("shortcode", $shortcode)->firstOrFail();
+    public function updateUrl(UrlShort $short_url, $data){
         $short_url->update($data);
+        return $short_url;
+    }
+
+    public function deleteUrl(UrlShort $short_url){
+        $short_url->delete();
+        return $short_url;
+    }
+
+    public function increaseAccesCount(UrlShort $short_url){
+        $short_url->access_count++;
+        $short_url->save();
         return $short_url;
     }
 }
