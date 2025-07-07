@@ -11,6 +11,26 @@ class UrlShortViewTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_success_shorturl_redirect(): void
+    {
+        $test_user = $this->generate_test_user();
+        $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
+        $response = $this->get(
+            route('shorturl.redirect', ['short_code' => $short_url->short_code])
+        );
+        $response->assertStatus(302);
+    }
+
+    public function test_fail_shorturl_redirect_not_exist(): void
+    {
+        $test_user = $this->generate_test_user();
+        $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
+        $response = $this->get(
+            route('shorturl.redirect', ['short_code' => "PUNGLIASD"])
+        );
+        $response->assertStatus(404);
+    }
+
     public function test_success_get_shorturl(): void
     {
         $test_user = $this->generate_test_user();
