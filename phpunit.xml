@@ -20,7 +20,13 @@
 
     <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
-            <directory>src</directory>
+            <directory>app</directory>
         </include>
+        <exclude>
+            <file>app/Providers/AppServiceProvider.php</file>
+        </exclude>
     </source>
+
+
+
 </phpunit>

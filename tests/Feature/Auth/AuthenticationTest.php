@@ -2,14 +2,21 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Http\Controllers\AuthController;
 use App\Models\User;
+use App\Service\AuthService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\TestCase;
 
+#[CoversClass(AuthController::class)]
+#[UsesClass(User::class), UsesClass(AuthService::class)]
 class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
+
 
     public function test_success_user_can_register(): void
     {
@@ -63,7 +70,7 @@ class AuthenticationTest extends TestCase
         $test_user = $this->generate_test_user();
         $response = $this->post(route('auth.refresh'), [], [
             'Accept' => 'application/json',
-            'Authorization' => "Bearer ".$test_user->refreshToken
+            'Authorization' => "Bearer " . $test_user->refreshToken
         ]);
         $response->assertStatus(200);
         $response->assertJson([
@@ -78,16 +85,16 @@ class AuthenticationTest extends TestCase
         $test_user = $this->generate_test_user();
         $logout_response = $this->post(route('auth.logout'), [], [
             'Accept' => 'application/json',
-            'Authorization' => "Bearer ".$test_user->accessToken
+            'Authorization' => "Bearer " . $test_user->accessToken
         ]);
         $logout_response->assertStatus(200);
         $refresh_response = $this->post(route('auth.refresh'), [], [
             'Accept' => 'application/json',
-            'Authorization' => "Bearer ".$test_user->refreshToken
+            'Authorization' => "Bearer " . $test_user->refreshToken
         ]);
         $refresh_response->assertStatus(401);
         $refresh_response->assertJson([
-            'message'=>true
+            'message' => true
         ]);
     }
 
@@ -100,7 +107,7 @@ class AuthenticationTest extends TestCase
         ]);
         $refresh_response->assertStatus(401);
         $refresh_response->assertJson([
-            'message'=>true
+            'message' => true
         ]);
     }
 }

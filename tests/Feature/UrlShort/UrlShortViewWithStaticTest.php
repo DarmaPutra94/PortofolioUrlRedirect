@@ -2,11 +2,22 @@
 
 namespace Tests\Feature\UrlShort;
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UrlShortController;
+use App\Http\Resources\UrlShortResource;
+use App\Models\UrlShort;
 use App\Models\User;
+use App\Policies\UrlShortPolicy;
+use App\Service\AuthService;
+use App\Service\UrlShorterService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Tests\TestCase;
 
+#[CoversClass(UrlShortController::class)]
+#[UsesClass(User::class), UsesClass(UrlShortPolicy::class), UsesClass(AuthService::class), UsesClass(UrlShorterService::class), UsesClass(AuthController::class), UsesClass(UrlShort::class), UsesClass(UrlShortResource::class)]
 class UrlShortViewWithStaticTest extends TestCase
 {
     use RefreshDatabase;
