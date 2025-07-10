@@ -37,12 +37,12 @@ class UrlShortUpdateTest extends TestCase
             ]
         );
         $response->assertStatus(200);
-        $response->assertJson([
-            "id" => true,
-            "url" => true,
-            "shortCode" => true,
-            "createdAt" => true,
-            "updatedAt" => true
+        $response->assertJsonStructure([
+            "id",
+            "url",
+            "shortCode",
+            "createdAt",
+            "updatedAt"
         ]);
     }
 

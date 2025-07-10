@@ -34,13 +34,13 @@ class UrlShortViewWithStaticTest extends TestCase
             ]
         );
         $response->assertStatus(200);
-        $response->assertJson([
-            "id" => true,
-            "url" => true,
-            "shortCode" => true,
-            "createdAt" => true,
-            "updatedAt" => true,
-            "accessCount" => true
+        $response->assertJsonStructure([
+            "id",
+            "url",
+            "shortCode",
+            "createdAt",
+            "updatedAt",
+            "accessCount"
         ]);
     }
 

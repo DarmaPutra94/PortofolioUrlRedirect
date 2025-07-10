@@ -32,12 +32,12 @@ class UrlShortCreationTest extends TestCase
             'Authorization' => "Bearer " . $test_user->accessToken
         ]);
         $response->assertStatus(201);
-        $response->assertJson([
-            "id" => true,
-            "url" => true,
-            "shortCode" => true,
-            "createdAt" => true,
-            "updatedAt" => true
+        $response->assertJsonStructure([
+            "id",
+            "url",
+            "shortCode",
+            "createdAt",
+            "updatedAt"
         ]);
     }
 
@@ -51,9 +51,9 @@ class UrlShortCreationTest extends TestCase
             'Authorization' => "Bearer " . $test_user->accessToken
         ]);
         $response->assertStatus(422);
-        $response->assertJson([
-            'message' => true,
-            'errors' => true
+        $response->assertJsonStructure([
+            'message',
+            'errors'
         ]);
     }
 
