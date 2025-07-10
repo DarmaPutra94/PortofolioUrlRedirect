@@ -72,4 +72,4 @@ jobs:
         DB_DATABASE: laravel
         DB_USERNAME: laravel
         DB_PASSWORD: secret
-      run: php artisan test
+      run: php artisan test || exit 1
