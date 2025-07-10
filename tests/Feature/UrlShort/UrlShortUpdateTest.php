@@ -25,100 +25,85 @@ class UrlShortUpdateTest extends TestCase
 
     public function test_success_update_shorturl(): void
     {
-        try {
-            $test_user = $this->generate_test_user();
-            $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
-            $response = $this->put(
-                route('shorturl.update', ['short_code' => $short_url->short_code]),
-                [
-                    'url' => 'https://roadmap.sh'
-                ],
-                [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer " . $test_user->accessToken
-                ]
-            );
-            $response->assertStatus(200);
-            $response->assertJsonStructure([
-                "id",
-                "url",
-                "shortCode",
-                "createdAt",
-                "updatedAt"
-            ]);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $test_user = $this->generate_test_user();
+        $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
+        $response = $this->put(
+            route('shorturl.update', ['short_code' => $short_url->short_code]),
+            [
+                'url' => 'https://roadmap.sh'
+            ],
+            [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer " . $test_user->accessToken
+            ]
+        );
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            "id",
+            "url",
+            "shortCode",
+            "createdAt",
+            "updatedAt"
+        ]);
     }
 
     public function test_fail_update_shorturl_invalid_param(): void
     {
-        try {
-            $test_user = $this->generate_test_user();
-            $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
-            $response = $this->put(
-                route('shorturl.update', ['short_code' => $short_url->short_code]),
-                [
-                    'orka' => 'test'
-                ],
-                [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer " . $test_user->accessToken
-                ]
-            );
-            $response->assertStatus(422);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $test_user = $this->generate_test_user();
+        $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
+        $response = $this->put(
+            route('shorturl.update', ['short_code' => $short_url->short_code]),
+            [
+                'orka' => 'test'
+            ],
+            [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer " . $test_user->accessToken
+            ]
+        );
+        $response->assertStatus(422);
     }
 
     public function test_fail_update_shorturl_wrong_user(): void
     {
-        try {
-            $wrong_user = $this->generate_test_user();
-            $correct_user = User::factory()->create();
-            $short_url = $this->generate_test_url_short($correct_user);
-            $response = $this->put(route('shorturl.update', ['short_code' => $short_url->short_code]), [
-                'url' => 'https://roadmap.sh'
-            ], [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer " . $wrong_user->accessToken
-            ]);
-            $response->assertStatus(403);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $wrong_user = $this->generate_test_user();
+        $correct_user = User::factory()->create();
+        $short_url = $this->generate_test_url_short($correct_user);
+        $response = $this->put(route('shorturl.update', ['short_code' => $short_url->short_code]), [
+            'url' => 'https://roadmap.sh'
+        ], [
+            'Accept' => 'application/json',
+            'Authorization' => "Bearer " . $wrong_user->accessToken
+        ]);
+        $response->assertStatus(403);
     }
 
     public function test_fail_update_shorturl_unauthenticated_user(): void
     {
-        try {
-            $correct_user = User::factory()->create();
-            $short_url = $this->generate_test_url_short($correct_user);
-            $response = $this->put(route('shorturl.update', ['short_code' => $short_url->short_code]), [
-                'url' => 'https://roadmap.sh'
-            ], [
-                'Accept' => 'application/json',
-            ]);
-            $response->assertStatus(401);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $correct_user = User::factory()->create();
+        $short_url = $this->generate_test_url_short($correct_user);
+        $response = $this->put(route('shorturl.update', ['short_code' => $short_url->short_code]), [
+            'url' => 'https://roadmap.sh'
+        ], [
+            'Accept' => 'application/json',
+        ]);
+        $response->assertStatus(401);
     }
 
     public function test_fail_update_shorturl_invalid_shortcode(): void
     {
-        try {
-            $test_user = $this->generate_test_user();
-            $response = $this->put(route('shorturl.update', ['short_code' => "FAILED"]), [
-                'url' => 'https://roadmap.sh'
-            ], [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer " . $test_user->accessToken
-            ]);
-            $response->assertStatus(404);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $test_user = $this->generate_test_user();
+        $response = $this->put(route('shorturl.update', ['short_code' => "FAILED"]), [
+            'url' => 'https://roadmap.sh'
+        ], [
+            'Accept' => 'application/json',
+            'Authorization' => "Bearer " . $test_user->accessToken
+        ]);
+        $response->assertStatus(404);
     }
 }

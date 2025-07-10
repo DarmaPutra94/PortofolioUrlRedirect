@@ -25,7 +25,6 @@ class UrlShortCreationTest extends TestCase
 
     public function test_success_create_new_url_short(): void
     {
-        try {
         $test_user = $this->generate_test_user();
         $response = $this->post(route('shorturl.store'), [
             "url" => 'https://laravel.com/'
@@ -41,14 +40,10 @@ class UrlShortCreationTest extends TestCase
             "createdAt",
             "updatedAt"
         ]);
-                } catch (Exception $e) {
-            dd($e);
-        }
     }
 
     public function test_fail_create_new_url_short_with_invalid_parameter(): void
     {
-        try {
         $test_user = $this->generate_test_user();
         $response = $this->post(route('shorturl.store'), [
             "fail" => fake()->url()
@@ -61,22 +56,15 @@ class UrlShortCreationTest extends TestCase
             'message',
             'errors'
         ]);
-                } catch (Exception $e) {
-            dd($e);
-        }
     }
 
     public function test_fail_success_create_new_url_short_with_nonauthenticated_user(): void
     {
-        try {
         $response = $this->post(route('shorturl.store'), [
             "url" => fake()->url()
         ], [
             'Accept' => 'application/json',
         ]);
         $response->assertStatus(401);
-                } catch (Exception $e) {
-            dd($e);
-        }
     }
 }

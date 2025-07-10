@@ -25,71 +25,58 @@ class UrlShortViewWithStaticTest extends TestCase
 
     public function test_success_get_shorturl_with_statistic(): void
     {
-        try {
-            $test_user = $this->generate_test_user();
-            $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
-            $response = $this->get(
-                route('shorturl.show-with-statistic', ['short_code' => $short_url->short_code]),
-                [
-                    'Accept' => 'application/json',
-                    'Authorization' => "Bearer " . $test_user->accessToken
-                ]
-            );
-            $response->assertStatus(200);
-            $response->assertJsonStructure([
-                "id",
-                "url",
-                "shortCode",
-                "createdAt",
-                "updatedAt",
-                "accessCount"
-            ]);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $test_user = $this->generate_test_user();
+        $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
+        $response = $this->get(
+            route('shorturl.show-with-statistic', ['short_code' => $short_url->short_code]),
+            [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer " . $test_user->accessToken
+            ]
+        );
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            "id",
+            "url",
+            "shortCode",
+            "createdAt",
+            "updatedAt",
+            "accessCount"
+        ]);
     }
 
     public function test_fail_get_shorturl_with_statistic_wrong_user(): void
     {
-        try {
-            $wrong_user = $this->generate_test_user();
-            $correct_user = User::factory()->create();
-            $short_url = $this->generate_test_url_short($correct_user);
-            $response = $this->get(route('shorturl.show-with-statistic', ['short_code' => $short_url->short_code]), [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer " . $wrong_user->accessToken
-            ]);
-            $response->assertStatus(403);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $wrong_user = $this->generate_test_user();
+        $correct_user = User::factory()->create();
+        $short_url = $this->generate_test_url_short($correct_user);
+        $response = $this->get(route('shorturl.show-with-statistic', ['short_code' => $short_url->short_code]), [
+            'Accept' => 'application/json',
+            'Authorization' => "Bearer " . $wrong_user->accessToken
+        ]);
+        $response->assertStatus(403);
     }
 
     public function test_fail_get_shorturl_with_statistic_unauthenticated_user(): void
     {
-        try {
-            $correct_user = User::factory()->create();
-            $short_url = $this->generate_test_url_short($correct_user);
-            $response = $this->get(route('shorturl.show-with-statistic', ['short_code' => $short_url->short_code]), [
-                'Accept' => 'application/json',
-            ]);
-            $response->assertStatus(401);
-        } catch (Exception $e) {
-            dd($e);
-        }
+
+        $correct_user = User::factory()->create();
+        $short_url = $this->generate_test_url_short($correct_user);
+        $response = $this->get(route('shorturl.show-with-statistic', ['short_code' => $short_url->short_code]), [
+            'Accept' => 'application/json',
+        ]);
+        $response->assertStatus(401);
     }
 
     public function test_fail_get_shorturl_with_statistic_invalid_shortcode(): void
     {
-        try {
-            $test_user = $this->generate_test_user();
-            $response = $this->get(route('shorturl.show-with-statistic', ['short_code' => "FAILED"]),  [
-                'Accept' => 'application/json',
-                'Authorization' => "Bearer " . $test_user->accessToken
-            ]);
-            $response->assertStatus(404);
-        } catch (Exception $e) {
-            dd($e);
-        }
+        $test_user = $this->generate_test_user();
+        $response = $this->get(route('shorturl.show-with-statistic', ['short_code' => "FAILED"]),  [
+            'Accept' => 'application/json',
+            'Authorization' => "Bearer " . $test_user->accessToken
+        ]);
+        $response->assertStatus(404);
     }
 }
