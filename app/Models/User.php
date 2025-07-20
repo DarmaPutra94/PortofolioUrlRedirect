@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Notifications\CustomPasswordResetNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -26,6 +27,10 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+
+    public function sendPasswordResetNotification($token){
+        $this->notify(new CustomPasswordResetNotification($token));
+    }
 
     /**
      * The attributes that should be hidden for serialization.
