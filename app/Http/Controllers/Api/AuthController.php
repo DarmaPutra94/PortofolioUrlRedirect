@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\User;
 use App\Service\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -20,9 +21,9 @@ class AuthController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users', 'max:255'],
-            'password' => ['required', 'string']
+            'password' => ['required', 'string', 'confirmed']
         ]);
-        $user = $this->auth_service_manager->register($data);
+        $user = $this->auth_service_manager->create($data);
         return response()->json([
             "user" => $user,
             "accessToken" => $user->generatePlainTextAccessToken(),
@@ -33,10 +34,16 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $data = $request->validate([
-            'email' => ['required', 'email', 'exists:users,email'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'string']
         ]);
-        $user = $this->auth_service_manager->login($data);
+        $user = $this->auth_service_manager->getUser($data['email']);
+        if(!$user || !$this->auth_service_manager->isValidUserCredential($user, $data['password'])){
+            abort(response()->json([
+                'message' => 'Wrong credential',
+            ], 401));
+        };
+        $user->tokens()->delete();
         return response()->json([
             "user" => $user,
             "accessToken" => $user->generatePlainTextAccessToken(),

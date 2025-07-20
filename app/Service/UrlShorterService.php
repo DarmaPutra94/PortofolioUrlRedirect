@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Models\UrlShort;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -17,12 +19,15 @@ class UrlShorterService
         //
     }
 
-    public function getUrl($short_code){
-        $short_url = UrlShort::where('short_code', $short_code)->firstOrFail();
-        return $short_url;
+    public function getAllUserShortLinksPaginated(User $user, String $query='', int $itemPerPage=10): LengthAwarePaginator{
+        return $user->shortUrls()->whereLike('short_code', $query.'%')->paginate($itemPerPage);
     }
 
-    public function generateShortUrlCode(){
+    public function getUrl(String $short_code): UrlShort{
+        return UrlShort::where('short_code', $short_code)->firstOrFail();
+    }
+
+    public function generateShortUrlCode(): String{
         do {
             $code = Str::random(6);
         } while (UrlShort::where('short_code', $code)->exists());
@@ -30,8 +35,7 @@ class UrlShorterService
     }
 
     public function storeUrl(User $user, $data){
-        $short_url = $user->shortUrls()->create($data);
-        return $short_url;
+        return $user->shortUrls()->create($data);
     }
 
     public function updateUrl(UrlShort $short_url, $data){

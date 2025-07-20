@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\UrlShort;
 use App\Models\User;
@@ -8,6 +8,7 @@ use App\Service\UrlShorterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\Controller;
 
 class UrlShortController extends Controller
 {
