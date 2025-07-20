@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\UrlShort;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UrlShortController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UrlShortController;
 use App\Models\UrlShort;
 use App\Models\User;
 use App\Policies\UrlShortPolicy;

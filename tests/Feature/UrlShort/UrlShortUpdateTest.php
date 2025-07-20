@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\UrlShort;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UrlShortController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UrlShortController;
 use App\Http\Resources\UrlShortResource;
 use App\Models\UrlShort;
 use App\Models\User;
@@ -28,7 +28,7 @@ class UrlShortUpdateTest extends TestCase
 
         $test_user = $this->generate_test_user();
         $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
-        $response = $this->put(
+        $response = $this->putJson(
             route('shorturl.update', ['short_code' => $short_url->short_code]),
             [
                 'url' => 'https://roadmap.sh'
@@ -53,7 +53,7 @@ class UrlShortUpdateTest extends TestCase
 
         $test_user = $this->generate_test_user();
         $short_url = $this->generate_test_url_short(User::find($test_user->user['id']));
-        $response = $this->put(
+        $response = $this->putJson(
             route('shorturl.update', ['short_code' => $short_url->short_code]),
             [
                 'orka' => 'test'
@@ -72,7 +72,7 @@ class UrlShortUpdateTest extends TestCase
         $wrong_user = $this->generate_test_user();
         $correct_user = User::factory()->create();
         $short_url = $this->generate_test_url_short($correct_user);
-        $response = $this->put(route('shorturl.update', ['short_code' => $short_url->short_code]), [
+        $response = $this->putJson(route('shorturl.update', ['short_code' => $short_url->short_code]), [
             'url' => 'https://roadmap.sh'
         ], [
             'Accept' => 'application/json',
@@ -86,7 +86,7 @@ class UrlShortUpdateTest extends TestCase
 
         $correct_user = User::factory()->create();
         $short_url = $this->generate_test_url_short($correct_user);
-        $response = $this->put(route('shorturl.update', ['short_code' => $short_url->short_code]), [
+        $response = $this->putJson(route('shorturl.update', ['short_code' => $short_url->short_code]), [
             'url' => 'https://roadmap.sh'
         ], [
             'Accept' => 'application/json',
@@ -98,7 +98,7 @@ class UrlShortUpdateTest extends TestCase
     {
 
         $test_user = $this->generate_test_user();
-        $response = $this->put(route('shorturl.update', ['short_code' => "FAILED"]), [
+        $response = $this->putJson(route('shorturl.update', ['short_code' => "FAILED"]), [
             'url' => 'https://roadmap.sh'
         ], [
             'Accept' => 'application/json',

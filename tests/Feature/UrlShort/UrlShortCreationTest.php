@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\UrlShort;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UrlShortController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UrlShortController;
 use App\Http\Resources\UrlShortResource;
 use App\Models\UrlShort;
 use App\Models\User;
@@ -26,7 +26,7 @@ class UrlShortCreationTest extends TestCase
     public function test_success_create_new_url_short(): void
     {
         $test_user = $this->generate_test_user();
-        $response = $this->post(route('shorturl.store'), [
+        $response = $this->postJson(route('shorturl.store'), [
             "url" => 'https://laravel.com/'
         ], [
             'Accept' => 'application/json',
@@ -45,7 +45,7 @@ class UrlShortCreationTest extends TestCase
     public function test_fail_create_new_url_short_with_invalid_parameter(): void
     {
         $test_user = $this->generate_test_user();
-        $response = $this->post(route('shorturl.store'), [
+        $response = $this->postJson(route('shorturl.store'), [
             "fail" => fake()->url()
         ], [
             'Accept' => 'application/json',
@@ -60,7 +60,7 @@ class UrlShortCreationTest extends TestCase
 
     public function test_fail_success_create_new_url_short_with_nonauthenticated_user(): void
     {
-        $response = $this->post(route('shorturl.store'), [
+        $response = $this->postJson(route('shorturl.store'), [
             "url" => fake()->url()
         ], [
             'Accept' => 'application/json',
