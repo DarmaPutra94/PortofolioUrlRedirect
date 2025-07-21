@@ -20,6 +20,8 @@ Route::prefix('auth')->name("auth.")->group(function () {
 });
 
 Route::prefix('shorturl')->name("shorturl.")->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [UrlShortController::class, 'index'])->name('index');
+    Route::get('/stats', [UrlShortController::class, 'index'])->name('index-with-statistic');
     Route::post('/store', [UrlShortController::class, "store"])->name('store');
     Route::prefix('{short_code}')->group(function () {
         Route::get('', [UrlShortController::class, 'show'])->name('show');

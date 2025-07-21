@@ -21,7 +21,7 @@ class UrlShortResource extends JsonResource
             "shortCode"=>$this->short_code,
             "createdAt"=>$this->created_at,
             "updatedAt"=>$this->updated_at,
-            $this->mergeWhen($request->routeIs('shorturl.show-with-statistic'), [
+            $this->mergeWhen(($request->routeIs('shorturl.show-with-statistic') || $request->routeIs('shorturl.index-with-statistic')), [
                 "accessCount"=>$this->access_count
             ])
         ];
