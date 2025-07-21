@@ -8,7 +8,7 @@
                 <label class="form-label" for="Name">Name</label>
                 <input id="name" type="text" class="form-control" name="name" placeholder="yourname..."
                     autocomplete="name">
-                <x-input-error :messages="$errors->get('email')"></x-input-error>
+                <x-input-error :messages="$errors->get('name')"></x-input-error>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="email">Email</label>
