@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\UrlShort;
-use App\Models\User;
 use App\Service\UrlShorterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UrlShortResource;
 
 class UrlShortController extends Controller
 {
@@ -20,9 +20,12 @@ class UrlShortController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $user = Auth::user();
+        $query = $request->query('short_url') ?? '';
+        $short_urls = $this->url_shorter_service_manager->getAllUserShortLinksPaginated($user, $query);
+        return UrlShortResource::collection($short_urls);
     }
 
     /**
