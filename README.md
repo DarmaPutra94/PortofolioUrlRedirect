@@ -50,13 +50,15 @@ This project demonstrates my backend development skills using Laravel. It includ
 
 ## 📦 Getting Started
 
->git clone https://github.com/your-username/url-shortener.git
->cd url-shortener
->composer install
->cp .env.example .env
->php artisan key:generate
->php artisan migrate
->php artisan serve
+```bash
+git clone https://github.com/your-username/url-shortener.git
+cd url-shortener
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan serve
+```
 
 ---
 
