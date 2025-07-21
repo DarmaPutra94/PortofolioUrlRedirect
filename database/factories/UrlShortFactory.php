@@ -18,7 +18,7 @@ class UrlShortFactory extends Factory
     {
         return [
             'url' => fake()->url(),
-            'short_code' => fake()->randomLetter(),
+            'short_code' => fake()->unique()->randomLetter(),
             'access_count' => fake()->randomDigit()
         ];
     }
