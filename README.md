@@ -76,8 +76,6 @@ Development is ongoing, and new updates will be reflected here as they are compl
 
 ## 🚀 Live Demo
 
-## 🚀 Live Demo
-
 A live demo of this URL shortening service is available for testing and exploration.  
 Feel free to try out the API endpoints and see the app in action!
 
