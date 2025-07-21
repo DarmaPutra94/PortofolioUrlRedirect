@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Handle Laravel requests
+    RewriteRule ^$ public/index.php [L]
+    RewriteRule ^(?!public/)(.*)$ public/$1 [L]
+
+    # Serve static files directly from the public folder
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Handle Vite-built frontend requests
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ dist/$1 [L]
+
+    # Fallback to Laravel's index.php for other requests
+    RewriteRule . public/index.php [L]
+</IfModule>
