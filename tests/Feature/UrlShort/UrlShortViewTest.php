@@ -46,6 +46,83 @@ class UrlShortViewTest extends TestCase
         $response->assertStatus(404);
     }
 
+    public function test_success_get_user_shorturls(): void
+    {
+
+        $test_user = $this->generate_test_user();
+        $this->generate_many_test_url_short(User::find($test_user->user['id']));
+        $response = $this->get(
+            route('shorturl.index'),
+            [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer " . $test_user->accessToken
+            ]
+        );
+        $response->assertStatus(200);
+        $response->assertExactJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'url',
+                    'shortCode',
+                    'createdAt',
+                    'updatedAt',
+                ],
+            ],
+            'links' => [
+                'first',
+                'last',
+                'prev',
+                'next',
+            ],
+            'meta' => [
+                'current_page',
+                'from',
+                'last_page',
+                'links',
+                'path',
+                'per_page',
+                'to',
+                'total',
+            ],
+        ]);
+    }
+
+    public function test_success_wrong_user_get_empty_shorturls(): void
+    {
+
+        $test_user = $this->generate_test_user();
+        $wrong_test_user = $this->generate_test_user();
+        $this->generate_many_test_url_short(User::find($test_user->user['id']));
+        $response = $this->get(
+            route('shorturl.index'),
+            [
+                'Accept' => 'application/json',
+                'Authorization' => "Bearer " . $wrong_test_user->accessToken
+            ]
+        );
+        $response->assertStatus(200);
+        $response->assertExactJsonStructure([
+            'data' => [],
+            'links' => [
+                'first',
+                'last',
+                'prev',
+                'next',
+            ],
+            'meta' => [
+                'current_page',
+                'from',
+                'last_page',
+                'links',
+                'path',
+                'per_page',
+                'to',
+                'total',
+            ],
+        ]);
+    }
+
     public function test_success_get_shorturl(): void
     {
 
