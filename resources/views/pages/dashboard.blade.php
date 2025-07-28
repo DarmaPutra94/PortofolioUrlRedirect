@@ -1,7 +1,7 @@
 @extends('layouts.auth-layout')
 @section('content')
     <div class="row px-4 py-3 justify-content-center" x-data="shorturllist">
-        <div class="col-12 col-lg-10 shadow rounded px-3 py-2">
+        <div class="col-12 col-lg-10 shadow rounded px-3 py-2 mb-4 mb-lg-0">
             <div class="d-flex flex-column flex-lg-row gap-0 gap-lg-3 justify-content-between w-100">
                 <form class="d-flex flex-column flex-lg-row" action="{{ route('frontend.dashboard') }}" method="GET">
                     <input class="form-control my-2 w-100 me-2 w-lg-25" value="{{ request()->get('short_url') }}"
@@ -10,7 +10,7 @@
                 </form>
                 <a href="{{ route('frontend.create') }}" class="btn btn-primary my-2 text-decoration-none">+ New Link</a>
             </div>
-            <div class="overflow-auto">
+            <div class="overflow-auto d-none d-lg-block">
                 <table class="table" style="min-width: max-content">
                     <thead>
                         <tr>
@@ -22,6 +22,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <template x-if="short_url_list.length === 0">
+                            <td colspan="5">
+                                <p class="m-0 text-center fw-bold">No shortlink is found.</p>
+                            </td>
+                        </template>
                         <template x-for="(short_url, index) in short_url_list">
                             <tr x-data="{ edit_mode: false }">
                                 <th scope="row" x-text="index+1"></th>
@@ -98,6 +103,52 @@
                     </tbody>
                 </table>
             </div>
+            <div class="d-none d-lg-block">
+                {{ $shortUrls->links() }}
+            </div>
+        </div>
+        <template x-if="short_url_list.length === 0">
+             <div class="d-lg-none shadow rounded px-3 py-2 mb-3">
+                <p class="m-0 text-center fw-bold">No shortlink is found.</p>
+             </div>
+        </template>
+        <template x-for="(short_url, index) in short_url_list">
+            <div class="d-lg-none shadow rounded px-3 py-2 mb-3" x-data="{ edit_mode: false }">
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="m-0 fw-bold w-50">#</h6>
+                    <h6 class="m-0 w-50" x-text="index+1"></h6>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="m-0 fw-bold w-50">Link</h6>
+                    <h6 class="text-break m-0 w-50" x-show="!edit_mode" class="m-0" x-text="short_url.url"></h6>
+                    <textarea rows="4" x-cloak x-show="edit_mode" class="form-control w-50" x-model="short_url.url"></textarea>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="m-0 fw-bold w-50">Short Link</h6>
+                    <h6 class="text-break m-0 w-50" class="m-0" x-text="short_url.short_code"></h6>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <h6 class="m-0 fw-bold w-50">Access Count</h6>
+                    <h6 class="text-break m-0 w-50" class="m-0" x-text="short_url.access_count"></h6>
+                </div>
+                <button x-show="!edit_mode" x-on:click="edit_mode = true" class="btn btn-primary mb-2 w-100"
+                    type="button">
+                    EDIT
+                </button>
+                <button x-cloak x-show="edit_mode"
+                    x-on:click="async ()=>{
+                                            await update_short_url(short_url);
+                                            edit_mode=false;
+                                        }"
+                    class="btn btn-primary mb-2 w-100" type="button">
+                    SAVE
+                </button>
+                <button class="btn btn-danger w-100" type="button" x-on:click="async ()=>show_delete_modal(short_url)">
+                    DELETE
+                </button>
+            </div>
+        </template>
+        <div class="d-lg-none mt-3">
             {{ $shortUrls->links() }}
         </div>
         <div x-cloak x-show="success.show">
