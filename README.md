@@ -83,5 +83,9 @@ Feel free to try out the API endpoints and see the app in action!
 
 Link: https://urlshorter.darma.icu/
 
+If you want to login as test user without registering please use the link below.
+
+Link: https://urlshorter.darma.icu/login/testuser
+
 > **Note:** This demo is provided for convenience and may be reset periodically.  
 > Use it for evaluation purposes only.
