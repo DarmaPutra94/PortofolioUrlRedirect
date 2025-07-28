@@ -104,13 +104,13 @@
                 </table>
             </div>
             <div class="d-none d-lg-block">
-                {{ $shortUrls->links() }}
+                {{ $shortUrls->appends(request()->query())->links() }}
             </div>
         </div>
         <template x-if="short_url_list.length === 0">
-             <div class="d-lg-none shadow rounded px-3 py-2 mb-3">
+            <div class="d-lg-none shadow rounded px-3 py-2 mb-3">
                 <p class="m-0 text-center fw-bold">No shortlink is found.</p>
-             </div>
+            </div>
         </template>
         <template x-for="(short_url, index) in short_url_list">
             <div class="d-lg-none shadow rounded px-3 py-2 mb-3" x-data="{ edit_mode: false }">
@@ -149,7 +149,7 @@
             </div>
         </template>
         <div class="d-lg-none mt-3">
-            {{ $shortUrls->links() }}
+            {{ $shortUrls->appends(request()->query())->links() }}
         </div>
         <div x-cloak x-show="success.show">
             <div class="alert alert-success d-flex align-items-center w-75 w-lg-25 position-fixed bottom-0 end-15px"
