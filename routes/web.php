@@ -15,6 +15,7 @@ Route::name('frontend.')->group(function () {
         Route::post('request-reset-password', [AuthController::class, 'requestResetPassword'])->name('request-reset-password');
         Route::get('reset-password/{token}/{user_id}', [AuthController::class, 'resetPasswordView'])->name('view-reset-password');
         Route::post('reset-password/{token}/{user_id}', [AuthController::class, 'resetPassword'])->name('reset-password');
+        Route::get('login/testuser', [AuthController::class, 'loginAsTestUser']);
     });
 
     Route::middleware(['auth'])->group(function () {

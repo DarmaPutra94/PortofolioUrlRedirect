@@ -88,6 +88,12 @@ class AuthController extends Controller
         return redirect(route('frontend.login'))->with(['successMessage' => 'Password has been changed!']);
     }
 
+    public function loginAsTestUser(){
+        $user = User::where('email', 'igustiagunggededarmaputra28@gmail.com')->first();
+        Auth::login($user);
+        return redirect(route('frontend.dashboard'));
+    }
+
     public function requestResetPasswordView(Request $request)
     {
         return view('pages.requestresetpassword');
