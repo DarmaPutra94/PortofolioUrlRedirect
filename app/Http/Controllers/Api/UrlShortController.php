@@ -14,7 +14,8 @@ class UrlShortController extends Controller
 {
     private $url_shorter_service_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->url_shorter_service_manager = new UrlShorterService();
     }
     /**
@@ -24,7 +25,8 @@ class UrlShortController extends Controller
     {
         $user = Auth::user();
         $query = $request->query('short_url') ?? '';
-        $short_urls = $this->url_shorter_service_manager->getAllUserShortLinksPaginated($user, $query);
+        $itemPerPage = $request->query('item_per_page') ?? 10;
+        $short_urls = $this->url_shorter_service_manager->getAllUserShortLinksPaginated($user, $query, $itemPerPage);
         return UrlShortResource::collection($short_urls);
     }
 
@@ -41,12 +43,12 @@ class UrlShortController extends Controller
      */
     public function store(Request $request)
     {
-        $data = (object) $request->validate(['url'=>'required|active_url']);
+        $data = (object) $request->validate(['url' => 'required|active_url']);
         Gate::authorize('create', UrlShort::class);
         $short_code = $this->url_shorter_service_manager->generateShortUrlCode();
         $short_url = $this->url_shorter_service_manager->storeUrl(Auth::user(), [
-            "url"=>$data->url,
-            "short_code"=>$short_code
+            "url" => $data->url,
+            "short_code" => $short_code
         ]);
         return $short_url->toResource();
     }
@@ -76,11 +78,11 @@ class UrlShortController extends Controller
      */
     public function update(Request $request, $short_code)
     {
-        $data = (object) $request->validate(['url'=>'required|active_url']);
+        $data = (object) $request->validate(['url' => 'required|active_url']);
         $short_url = $this->url_shorter_service_manager->getUrl($short_code);
         Gate::authorize('update', $short_url);
         $short_url = $this->url_shorter_service_manager->updateUrl($short_url, [
-            "url"=>$data->url,
+            "url" => $data->url,
         ]);
         return $short_url->toResource();
     }
@@ -96,7 +98,8 @@ class UrlShortController extends Controller
         return response()->json([], 204);
     }
 
-    public function redirect($short_code){
+    public function redirect($short_code)
+    {
         $short_url = $this->url_shorter_service_manager->getUrl($short_code);
         $short_url = $this->url_shorter_service_manager->increaseAccesCount($short_url);
         return redirect($short_url->url);

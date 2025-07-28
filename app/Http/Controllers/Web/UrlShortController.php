@@ -38,7 +38,8 @@ class UrlShortController extends Controller
     public function dashboard(Request $request){
         $user = Auth::user();
         $query = $request->query('short_url') ?? '';
-        $short_urls = $this->url_shorter_service_manager->getAllUserShortLinksPaginated($user, $query);
+        $itemPerPage = $request->query('item_per_page') ?? 10;
+        $short_urls = $this->url_shorter_service_manager->getAllUserShortLinksPaginated($user, $query, $itemPerPage);
         return view('pages.dashboard', ['shortUrls'=>$short_urls]);
     }
 }
