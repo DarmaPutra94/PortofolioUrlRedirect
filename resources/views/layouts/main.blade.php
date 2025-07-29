@@ -36,6 +36,14 @@
             display: none !important;
         }
 
+        .nav-link{
+            transition: opacity 200ms;
+        }
+
+        .nav-link:hover{
+           opacity: 0.6;
+        }
+
         @media(min-width: 992px){
             .w-lg-25{
                 width: 25% !important;
