@@ -10,8 +10,8 @@
                 </form>
                 <a href="{{ route('frontend.create') }}" class="btn btn-primary my-2 text-decoration-none">+ New Link</a>
             </div>
-            <div class="overflow-auto d-none d-lg-block">
-                <table class="table" style="min-width: max-content">
+            <div class="d-none d-lg-block">
+                <table class="table">
                     <thead>
                         <tr>
                             <th scope="col" style="width:5%">#</th>
