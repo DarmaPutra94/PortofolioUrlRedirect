@@ -5,7 +5,9 @@
             <a class="m-0 h2 text-decoration-none text-black" href="{{ route('frontend.dashboard') }}">Shortlinker</a>
         </div>
         <div class="col-1 col-lg-8 d-flex align-items-center">
-            <a class="m-0 h6 text-decoration-none text-black d-none d-lg-block nav-link" href="{{ route('frontend.dashboard') }}">Dashboard</a>
+            <nav class="px-3 py-2 d-none d-lg-block">
+            <a class="m-0 h6 text-decoration-none text-black nav-link" href="{{ route('frontend.dashboard') }}">Dashboard</a>
+            </nav>
         </div>
         <div class="col-5 col-lg-2 d-flex gap-2 justify-content-end align-items-center position-relative">
             <button type="button" class="border-0 btn p-0" data-bs-toggle="collapse" href="#userdropdown">
